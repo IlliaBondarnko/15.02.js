@@ -13,6 +13,8 @@ const user = {
   premium: true,
 };
 
+const { name, age, hobby, premium } = user;
+
 function scriptForUser(){
     Object.assign(user, { mood: 'happy' });
     for (const value in user) {
@@ -240,7 +242,13 @@ const account = {
    * Метод створює і повертає об'єкт транзакції.
    * Приймає суму і тип транзакції.
    */
-  createTransaction(amount, type) {},
+  createTransaction(amount, type) {
+    const transactonObj = {
+      sum: amount,
+      typeee: type,
+    }
+    const { sum, typeee } = transactonObj;
+  },
 
   /*
    * Метод відповідає за додавання суми до балансу.
@@ -248,7 +256,11 @@ const account = {
    * Викликає createTransaction для створення об'єкта транзакції
    * після чого додає його в історію транзакцій
    */
-  deposit(amount) {},
+  deposit(amount) {
+    this.balance += amount
+    this.createTransaction(amount, "deposit")
+    this.transactions.push(transactonObj)
+  },
 
   /*
    * Метод відповідає за зняття суми з балансу.
@@ -259,21 +271,45 @@ const account = {
    * Якщо amount більше, ніж поточний баланс, виводь повідомлення
    * про те, що зняття такої суми не можливо, недостатньо коштів.
    */
-  withdraw(amount) {},
+  withdraw(amount) {
+    if (this.balance > amount || this.balance === amount) {
+      this.balance -= amount;
+      this.createTransaction(amount, "withdraw");
+      this.transactions.push(transactonObj);
+    }
+    else {
+      console.log(alert("Зняття такої суми не можливо, недостатньо коштів."))
+    }
+    
+  },
 
   /*
    * Метод повертає поточний баланс
    */
-  getBalance() {},
+  getBalance() {
+    return `Your balance is ${this.balance}`
+  },
 
   /*
    * Метод шукає і повертає об'єкт транзакції по id
    */
-  getTransactionDetails(id) {},
+  getTransactionDetails(id) {
+    const index = id - 1;
+    return this.transactions[index];
+  },
 
   /*
    * Метод повертає кількість коштів
    * певного типу транзакції з усієї історії транзакцій
    */
-  getTransactionTotal(type) {},
-};
+  getTransactionTotal(type) {
+    let toReturn = []
+    for (let i = 0; i < this.transactions.length; i++) {
+      const element = this.transactions[i];
+      if (element.typeee === `${type}`) {
+        let result = toReturn.push(element)
+      };
+    };
+    return result;
+  }
+}
